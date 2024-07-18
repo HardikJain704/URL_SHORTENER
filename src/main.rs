@@ -1,16 +1,33 @@
 use sqlx::postgres::PgPoolOptions;
 use std::net::SocketAddr;
 use anyhow::Context;
+mod db;
 mod routes;
 mod utils;
+
+#[derive(Debug, Clone)]
+struct AppConfig {
+    database_url: String,
+}
+
+impl AppConfig {
+    fn from_env() -> Self {
+        let database_url = std::env::var("DATABASE_URL")
+            .unwrap_or_else(|_| "postgres://postgres:password@127.0.0.1:5433/postgres".to_string());
+
+        Self { database_url }
+    }
+}
 
 #[tokio::main]
 async fn main() -> anyhow::Result<(), anyhow::Error> {
     tracing_subscriber::fmt::init();
 
+    let config = AppConfig::from_env();
+
     let db = PgPoolOptions::new()
         .max_connections(50)
-        .connect("postgres://postgres:password@localhost:5432/postgres")
+        .connect(&config.database_url)
         .await
         .context("could not connect to database_url")?;
 
