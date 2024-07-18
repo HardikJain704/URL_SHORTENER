@@ -22,8 +22,11 @@ Below is a visual representation of how the URL shortener works:
 
 ### Description of the Diagram:
 - Browser: Represents the client making a request to shorten a URL (/shorten endpoint).
+
 - Get Request: Endpoint (/shorten) where clients send a POST request with a long URL to be shortened.
+
 - Specific URL: Endpoint (/:short_id) where short URLs redirect to the original long URLs.
+
 - DATABASE: Represents the database where mappings between short and long URLs are stored.
 
 - Extracts some form of id from path of request url: Logic to extract the short ID from the request path.
@@ -51,12 +54,8 @@ Installation:
 ### API Endpoints:
 
 1. Shorten URL: POST /shorten - Shorten a long URL. Example: 
-``` curl -X POST -d '{"url": "https://www.example.com"}' http://localhost:3000/shorten ```.
+``` curl -X POST -d '{"url": "https://www.example.com"}' http://localhost:30008 ```.
 
 2. Redirect: GET /:short_id - Redirect to the original URL corresponding to short_id. 
 Example: 
-``` curl -I http://localhost:3000/:short_id ```
-
-3. Health Check: GET /health - Check the health of the service. 
-Example: 
-``` curl http://localhost:3000/health```
+``` curl -I http://localhost:3000/:id ```
