@@ -1,0 +1,58 @@
+<mxfile host="app.diagrams.net" modified="2026-07-08T00:00:00.000Z" agent="5.0" version="24.7.17">
+  <diagram id="flow" name="Flow">
+    <mxGraphModel dx="1500" dy="850" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="1400" pageHeight="900" math="0" shadow="0">
+      <root>
+        <mxCell id="0"/>
+        <mxCell id="1" parent="0"/>
+        <mxCell id="2" value="Client / Browser" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="40" y="250" width="120" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="3" value="Load Balancer / Reverse Proxy&#xa;(Nginx / Traefik / HAProxy)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;strokeColor=#82b366;" vertex="1" parent="1">
+          <mxGeometry x="220" y="230" width="180" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="4" value="Middleware Layer&#xa;(Auth, Logging, Rate Limiting)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#ffe6cc;strokeColor=#d79b00;" vertex="1" parent="1">
+          <mxGeometry x="450" y="230" width="210" height="80" as="geometry"/>
+        </mxCell>
+        <mxCell id="5" value="Axum Router" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;strokeColor=#b85450;" vertex="1" parent="1">
+          <mxGeometry x="710" y="230" width="120" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="6" value="POST /&#xa;(requires x-api-key)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="900" y="140" width="160" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="7" value="GET /:id&#xa;(public redirect)" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;strokeColor=#d6b656;" vertex="1" parent="1">
+          <mxGeometry x="900" y="320" width="160" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="8" value="Parse request body&#xa;Validate URL" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="1120" y="140" width="150" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="9" value="Generate short ID&#xa;Insert into DB" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="1320" y="140" width="150" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="10" value="Lookup ID in DB&#xa;Redirect to target URL" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;strokeColor=#9673a6;" vertex="1" parent="1">
+          <mxGeometry x="1120" y="320" width="150" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="11" value="PostgreSQL" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="1320" y="320" width="150" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="12" value="Response: short URL" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="1520" y="140" width="130" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="13" value="HTTP redirect" style="rounded=1;whiteSpace=wrap;html=1;fillColor=#dae8fc;strokeColor=#6c8ebf;" vertex="1" parent="1">
+          <mxGeometry x="1520" y="320" width="130" height="60" as="geometry"/>
+        </mxCell>
+        <mxCell id="14" edge="1" source="2" target="3" parent="1"/>
+        <mxCell id="15" edge="1" source="3" target="4" parent="1"/>
+        <mxCell id="16" edge="1" source="4" target="5" parent="1"/>
+        <mxCell id="17" edge="1" source="5" target="6" parent="1"/>
+        <mxCell id="18" edge="1" source="5" target="7" parent="1"/>
+        <mxCell id="19" edge="1" source="6" target="8" parent="1"/>
+        <mxCell id="20" edge="1" source="8" target="9" parent="1"/>
+        <mxCell id="21" edge="1" source="9" target="11" parent="1"/>
+        <mxCell id="22" edge="1" source="7" target="10" parent="1"/>
+        <mxCell id="23" edge="1" source="10" target="11" parent="1"/>
+        <mxCell id="24" edge="1" source="9" target="12" parent="1"/>
+        <mxCell id="25" edge="1" source="10" target="13" parent="1"/>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>

@@ -6,13 +6,15 @@ A lightweight URL shortener built with Rust, Axum, SQLx, and PostgreSQL.
 
 - Create a short URL from a long URL
 - Redirect short URLs back to their original destination
-- Supports both plain text and JSON request bodies
-- Includes Docker support for the app and database
+- Accept plain text and JSON request bodies
+- Protect the shortening endpoint with an API key header
+- Log incoming requests and apply a simple in-memory rate limiter
+- Run locally or with Docker Compose
 
 ## Project structure
 
 - src/main.rs: app entry point and database setup
-- src/routes.rs: HTTP routes for shortening and redirecting
+- src/routes.rs: HTTP routes, middleware, and request handling
 - src/db/queries.rs: database query helpers
 - migrations/: SQL migrations for the links table
 - Dockerfile: container definition for the Rust app
@@ -28,10 +30,11 @@ A lightweight URL shortener built with Rust, Axum, SQLx, and PostgreSQL.
 ### Option 1: Without Docker
 
 1. Start PostgreSQL locally and make sure it is reachable on port 5432.
-2. Set the database URL:
+2. Set the database URL and API key:
 
 ```powershell
-$env:DATABASE_URL="postgres://postgres:password@127.0.0.1:5432/postgres"
+$env:DATABASE_URL = "postgres://postgres:password@127.0.0.1:5432/postgres"
+$env:API_KEY = "dev-secret"
 ```
 
 3. Run the app:
@@ -46,6 +49,8 @@ The server will start on:
 http://127.0.0.1:3008
 ```
 
+If API_KEY is not set, the app falls back to `dev-secret`.
+
 ### Option 2: With Docker Compose
 
 Run:
@@ -55,15 +60,18 @@ docker compose up --build
 ```
 
 This starts:
-- PostgreSQL on port 5432
+- PostgreSQL on port 5433
 - the Rust app on port 3008
 
 ## API usage
 
 ### Create a shortened URL
 
-```bash
-curl -X POST http://127.0.0.1:3008/ -H "Content-Type: application/json" -d '{"url":"https://example.com"}'
+```powershell
+curl.exe -i -X POST "http://127.0.0.1:3008/" `
+  -H "Content-Type: application/json" `
+  -H "x-api-key: dev-secret" `
+  -d '{"url":"https://www.youtube.com/"}'
 ```
 
 Example response:
@@ -74,9 +82,17 @@ http://localhost:3008/<short_id>
 
 ### Redirect to the original URL
 
-```bash
-curl -I http://127.0.0.1:3008/<short_id>
+```powershell
+curl.exe -I "http://127.0.0.1:3008/<short_id>"
 ```
+
+This returns an HTTP `303 See Other` redirect to the target URL.
+
+## Notes
+
+- The POST endpoint `/` requires the `x-api-key` header.
+- Requests are logged and rate-limited with a simple in-memory limiter, suitable for local development and demos.
+- For production, consider using a reverse proxy or a shared rate limiter.
 
 ## Database
 
