@@ -1,61 +1,89 @@
-### URLSHORTENER-RUST
+# URL Shortener Rust
 
-A simple URL shortener service implemented in Rust using SQLx and Axum.
-
-
-## Overview
-This project aims to provide a lightweight URL shortening service with a RESTful API. It utilizes Rust for its performance and reliability, SQLx for database interactions, and Axum for handling HTTP requests efficiently.
-
+A lightweight URL shortener built with Rust, Axum, SQLx, and PostgreSQL.
 
 ## Features
 
-- Shorten URLs: Convert long URLs into short, manageable links.
+- Create a short URL from a long URL
+- Redirect short URLs back to their original destination
+- Supports both plain text and JSON request bodies
+- Includes Docker support for the app and database
 
-- Redirect: Redirect users from short URLs to the original long URLs.
+## Project structure
+
+- src/main.rs: app entry point and database setup
+- src/routes.rs: HTTP routes for shortening and redirecting
+- src/db/queries.rs: database query helpers
+- migrations/: SQL migrations for the links table
+- Dockerfile: container definition for the Rust app
+- docker-compose.yaml: starts PostgreSQL and the app together
+
+## Prerequisites
+
+- Rust
+- PostgreSQL (or Docker)
+
+## Running locally
+
+### Option 1: Without Docker
+
+1. Start PostgreSQL locally and make sure it is reachable on port 5432.
+2. Set the database URL:
+
+```powershell
+$env:DATABASE_URL="postgres://postgres:password@127.0.0.1:5432/postgres"
+```
+
+3. Run the app:
+
+```powershell
+cargo run
+```
+
+The server will start on:
+
+```text
+http://127.0.0.1:3008
+```
+
+### Option 2: With Docker Compose
+
+Run:
+
+```bash
+docker compose up --build
+```
+
+This starts:
+- PostgreSQL on port 5432
+- the Rust app on port 3008
+
+## API usage
+
+### Create a shortened URL
+
+```bash
+curl -X POST http://127.0.0.1:3008/ -H "Content-Type: application/json" -d '{"url":"https://example.com"}'
+```
+
+Example response:
+
+```text
+http://localhost:3008/<short_id>
+```
+
+### Redirect to the original URL
+
+```bash
+curl -I http://127.0.0.1:3008/<short_id>
+```
+
+## Database
+
+The app uses a `links` table with the following columns:
+- `id`
+- `target_url`
+
+Migrations are stored in the `migrations/` folder.
 
 
-## Diagram
-Below is a visual representation of how the URL shortener works:
-
-
-![Diagram](Diagram.png)
-
-### Description of the Diagram:
-- Browser: Represents the client making a request to shorten a URL (/shorten endpoint).
-
-- Get Request: Endpoint (/shorten) where clients send a POST request with a long URL to be shortened.
-
-- Specific URL: Endpoint (/:short_id) where short URLs redirect to the original long URLs.
-
-- DATABASE: Represents the database where mappings between short and long URLs are stored.
-
-- Extracts some form of id from path of request url: Logic to extract the short ID from the request path.
-
-- Uses this id to lookup in db: Logic to query the database for the original long URL corresponding to the short ID.
-
-- Now, Redirects the browser to target url: Logic to redirect the client to the original long URL.
-
-## Setup and Usage
-
-### Prerequisites:
-
-1. Rust programming language installed.
-
-2. PostgreSQL database configured.
-Installation:
-
-### Installation:
-
-
-### Running the Server:
-
-``` cargo run --release ```
-
-### API Endpoints:
-
-1. Shorten URL: POST /shorten - Shorten a long URL. Example: 
-``` curl -X POST -d '{"url": "https://www.example.com"}' http://localhost:30008 ```.
-
-2. Redirect: GET /:short_id - Redirect to the original URL corresponding to short_id. 
-Example: 
-``` curl -I http://localhost:3000/:id ```
